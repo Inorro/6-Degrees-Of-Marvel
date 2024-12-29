@@ -1,2 +1,2 @@
 **/*.env
-nodemodules
+server/node_modules
