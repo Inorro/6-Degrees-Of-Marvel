@@ -3,6 +3,7 @@ import './Search.css'
 import { Autocomplete, TextField} from '@mui/material'
 
 function Search({ handleCallback ,basearr,reset,id}) {
+  console.log("Hello")
 
   const filterOptions2 = (options, { inputValue }) => {
     const recommendList = [];
