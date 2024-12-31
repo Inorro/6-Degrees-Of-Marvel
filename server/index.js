@@ -14,7 +14,6 @@ const pool = new Pool({
   },
 });
 
-
 const port = process.env.PORT || 4000;
 
 app.use(cors());
@@ -27,7 +26,6 @@ async function getData() {
   try {
     const { rows } = await client.query('SELECT * FROM characters');
     database = rows
-    // console.log(database)
     return rows
   } finally {
     client.release();
