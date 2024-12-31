@@ -23,14 +23,18 @@ var database = null
 var recursiveQuit = 0
 
 async function getData() {
-const client = await pool.connect();
-try {
-  const {rows} = await client.query('SELECT * FROM characters');
-  return rows
-} finally {
-  client.release();
+  const client = await pool.connect();
+  try {
+    const { rows } = await client.query('SELECT * FROM characters');
+    database = rows
+    // console.log(database)
+    return rows
+  } finally {
+    client.release();
+  }
 }
-}
+getData()
+
 
 var newnotable = require('./newnotable.json'); //Loading a map of notable characters with large appearance sets to prioritize when searching for connections
 var notableurls = [] //All the appearance pages for those characters
@@ -170,7 +174,7 @@ async function uncommonConnections(setA, setB, commonConnectionsA, commonConnect
   let i = 0
   while (changeCheckA == "CHANGE") {
     [appearanceArrayA, connectiveIssuesA, imgUrlA, firstConnectionNameA, changeCheckA] = await findDirectConnection(arrA, i) // Calling the function on line 282 to get the first direct connection of character A, and all important data associated with that connection
-    i ++
+    i++
   }
   appearanceSetA = new Set(appearanceArrayA)
   intersectionA = new Set([...appearanceSetA].filter(x => setB.has(x)));//Checks if that connection is shared with character B and returns the connection if so
@@ -181,7 +185,7 @@ async function uncommonConnections(setA, setB, commonConnectionsA, commonConnect
   i = 0
   while (changeCheckB == "CHANGE") {
     [appearanceArrayB, connectiveIssuesB, imgUrlB, firstConnectionNameB, changeCheckB] = await findDirectConnection(arrB, i)// Same logic as before but with character B
-    i ++
+    i++
   }
   appearanceSetB = new Set(appearanceArrayB)
   intersectionB = new Set([...appearanceSetB].filter(x => setA.has(x)));
@@ -337,7 +341,7 @@ async function findDirectConnection(arr, indexToCheck) {// Finding the best dire
   if (JSON.stringify(appearanceArray) === JSON.stringify(arr) || appearanceArray == null) {
     [appearanceArray, imgUrl, characterName] = await scrapeDirectConnection(1)
   }
-  if (appearanceArray == null||appearanceArray.length == 1) {
+  if (appearanceArray == null || appearanceArray.length == 1) {
     [appearanceArray, imgUrl, characterName] = await scrapeDirectConnection(2)
   }
   //console.log(characterName)
@@ -391,10 +395,10 @@ app.get("/img", async (req, res) => {
 
 
 app.get("/api", async (req, res) => {
-  database = await getData()
   res.json(database)
 });
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`)
+  //setTimeout(()=>console.log(database),5000)
 });
