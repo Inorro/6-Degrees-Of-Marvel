@@ -235,3 +235,9 @@ color: #2A679F;
     order: 5;
   }
 }
+@media only screen and (max-width : 320px) {
+  .searchbars{
+    flex-direction: column;
+    max-width: 500px;
+  }
+}

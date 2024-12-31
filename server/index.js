@@ -4,28 +4,33 @@ const cors = require("cors"); // cors is needed to connect to frontend
 const mysql = require("mysql2")
 const axios = require("axios");
 const cheerio = require("cheerio");
-
+const { Pool } = require("pg");
 require('dotenv').config();
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+
 
 const port = process.env.PORT || 4000;
 
 app.use(cors());
 
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
-});
-
 var database = null
 var recursiveQuit = 0
 
-connection.query('SELECT * FROM n_characters', (error, results) => { //Loads the table of characters
-  if (error) throw error;
-  database = results
-});
+async function getData() {
+const client = await pool.connect();
+try {
+  const {rows} = await client.query('SELECT * FROM characters');
+  return rows
+} finally {
+  client.release();
+}
+}
 
 var newnotable = require('./newnotable.json'); //Loading a map of notable characters with large appearance sets to prioritize when searching for connections
 var notableurls = [] //All the appearance pages for those characters
@@ -385,7 +390,8 @@ app.get("/img", async (req, res) => {
 })
 
 
-app.get("/api", (req, res) => {
+app.get("/api", async (req, res) => {
+  database = await getData()
   res.json(database)
 });
 
