@@ -396,6 +396,10 @@ app.get("/api", async (req, res) => {
   res.json(database)
 });
 
+app.get("/", async (req, res) => {
+  res.json("Server Connected")
+});
+
 app.listen(port, () => {
   console.log(`Server started on port ${port}`)
   //setTimeout(()=>console.log(database),5000)
