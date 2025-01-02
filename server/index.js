@@ -12,6 +12,8 @@ const pool = new Pool({
   ssl: {
     rejectUnauthorized: false,
   },
+  idleTimeoutMillis: 0,
+  connectionTimeoutMillis: 0,
 });
 
 const port = process.env.PORT || 4000;
