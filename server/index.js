@@ -395,7 +395,8 @@ app.get("/img", async (req, res) => {
 
 
 app.get("/api", async (req, res) => {
-  res.json(database)
+  db = await getData()
+  res.json(db)
 });
 
 app.get("/", async (req, res) => {
